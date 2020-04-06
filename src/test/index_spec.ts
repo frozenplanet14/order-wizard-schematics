@@ -50,7 +50,7 @@ describe('order-wizard', () => {
       // console.log(tree.files); use slice 4 for .DS_Store in mac
       tree.files.slice(3).forEach((filePath: string) => {
         if (!filePath.includes('.DS_Store')) {
-          expect(filePath.startsWith(`/${pathOption}/`)).toEqual(true);
+          expect(filePath.includes(`/${pathOption}/`)).toEqual(true);
         }
       });
     });

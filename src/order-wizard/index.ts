@@ -11,8 +11,10 @@ let materialTaskId: TaskId;
 // AST => abstract syntax tree
 export function orderWizard(_options: any): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const folderPath = normalize(strings.dasherize(_options.path + '/' + _options.name));
     const workspace = getWorkspace(_options, tree);
+    const project = getProject(_options, workspace);
+    const appRoot = `${project.root}/${project.sourceRoot}/${project.prefix}/`;
+    const folderPath = normalize(strings.dasherize(appRoot + _options.path + '/' + _options.name));
     let files = url('./files');
 
     const newTree = apply(files, [
@@ -52,12 +54,17 @@ function getWorkspace(_options: any, tree: Tree): experimental.workspace.Workspa
   return JSON.parse(workspace.toString());
 }
 
+function getProject(_options: any, workspace: any) {
+  _options.project = (_options.project === 'defaultProject')
+    ? workspace.defaultProject
+    : _options.project;
+
+  return workspace.projects[_options.project];
+}
+
 function updateRootModule(_options: any, workspace: any): Rule {
   return (tree: Tree, _context: SchematicContext): Tree => {
-    _options.project = (_options.project === 'defaultProject')
-      ? workspace.defaultProject
-      : _options.project;
-    const project = workspace.projects[_options.project];
+    const project = getProject(_options, workspace);
     const moduleName = strings.dasherize(_options.name);
     const exportedModuleName = strings.classify(_options.name);
     const modulePath = strings.dasherize(_options.path);

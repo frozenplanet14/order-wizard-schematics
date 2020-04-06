@@ -7,6 +7,7 @@ This repository is a basic Schematic implementation that serves as a starting po
 To test locally, install `@angular-devkit/schematics-cli` globally and use the `schematics` command line tool. That tool acts the same as the `generate` command of the Angular CLI, but also has a debug mode.
 
 Check the documentation with
+
 ```bash
 schematics --help
 ```
@@ -25,4 +26,15 @@ npm publish
 ```
 
 That's it!
- 
+
+### Testing schematics Locally
+
+```
+npm run build
+npm link -- inside the schematic folder
+npm link order-wizard -- inside the project where it needs to be used
+ng generate order-wizard:order-wizard --name=checkout
+
+npm publish
+ng generate order-wizard:order-wizard --help
+```
