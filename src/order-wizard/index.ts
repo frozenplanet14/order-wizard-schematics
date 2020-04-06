@@ -1,8 +1,10 @@
-import { Rule, SchematicContext, Tree, url, apply, move, mergeWith, MergeStrategy, template, filter, SchematicsException, chain } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree, url, apply, move, mergeWith, MergeStrategy, template, filter, SchematicsException, chain, TaskId } from '@angular-devkit/schematics';
 import { normalize, strings, experimental } from '@angular-devkit/core';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
 import { NodePackageTaskOptions } from '@angular-devkit/schematics/tasks/node-package/options';
 import * as ts from 'typescript';
+
+let materialTaskId: TaskId;
 
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
@@ -25,7 +27,8 @@ export function orderWizard(_options: any): Rule {
     const templateRule = mergeWith(newTree, MergeStrategy.Default);
     const updateModuleRule = updateRootModule(_options, workspace);
     const installMaterialRule = installMaterial();
-    const chainedRule = chain([templateRule, updateModuleRule, installMaterialRule]);
+    const addMaterialRule = addMaterial();
+    const chainedRule = chain([templateRule, updateModuleRule, installMaterialRule, addMaterialRule]);
     return chainedRule(tree, _context);
   };
 }
@@ -150,9 +153,24 @@ function installMaterial(): Rule {
       const options = <NodePackageTaskOptions>{
         packageName: materialDepName
       };
-      _context.addTask(new NodePackageInstallTask(options));
+      materialTaskId = _context.addTask(new NodePackageInstallTask(options));
       _context.logger.info('Installing Angular Material');
     }
+
+    return tree;
+  }
+}
+
+function addMaterial(): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    const options = {
+      theme: 'indigo-pink',
+      gestures: true,
+      animations: true
+    }
+
+    _context.addTask(new RunSchematicTask('@angular/material', 'ng-add', options), [materialTaskId]);
+    _context.logger.info('configuring Angular Material');
 
     return tree;
   }
