@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && jasmine src/**/*_spec.js",
+    "cp:test": "cpr angular.json src/test/stubs/angular.json -o && cpr package.json src/test/stubs/package.json -o",
     "start": "npm run build && npm run new:test",
     "new:test": "rm -rf some-path && schematics .:order-wizard --name=test --path=somePath --spec=false --dry-run=false"
   },
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@types/jasmine": "~3.5.0",
     "@types/node": "^12.11.1",
+    "cpr": "^3.0.1",
     "jasmine": "^3.5.0",
     "tslint": "^6.1.1"
   }

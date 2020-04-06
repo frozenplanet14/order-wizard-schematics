@@ -125,7 +125,7 @@ function findImportArray(file: ts.SourceFile): number {
   return pos;
 }
 
-function installMaterial(): Rule {
+export function installMaterial(): Rule {
   return (tree: Tree, _context: SchematicContext): Tree => {
     const packageJsonPath = '/package.json';
     const materialDepName = '@angular/material';
