@@ -19,7 +19,7 @@
     "@angular-devkit/core": "^9.1.0",
     "@angular-devkit/schematics": "^9.1.0",
     "@angular/cli": "^9.1.0",
-    "@angular/core": "^9.1.0",
+    "@angular/core": "^11.0.5",
     "@angular/platform-browser": "^9.1.0",
     "typescript": "~3.8.2"
   },
